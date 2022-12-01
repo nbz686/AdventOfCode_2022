@@ -3,13 +3,8 @@
 #include <string.h>
 
 //TODO: solution only works if input file has two empty lines at the bottom. 
+// Solution to part 2. I wrote over my solution for part 1 to do solution 2. 
 
-struct TopPlaces{
-    int First; 
-    int Second; 
-    int Third; 
-    int totalKcal; 
-};
 
 int main() {
     // For reading from the file: 
@@ -23,11 +18,9 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    struct TopPlaces Top; 
-    Top.First = 0; 
-    Top.Second = 0; 
-    Top.Third = 0; 
-    Top.totalKcal = 0; 
+    int First = 0; 
+    int Second = 0; 
+    int Third = 0; 
     int currentKcal = 0; 
 
     while ((read = getline(&line, &len, fp)) != -1) {
@@ -35,25 +28,25 @@ int main() {
         if(*line == '\n' || *line == '\r') {
             int tmp  = -1; 
             //To get fewer comparison I only check if current Kcal makes it into top three. 
-            if (Top.Third < currentKcal) {
-                    if (Top.First < currentKcal && tmp == -1) {
-                        Top.Third = Top.Second; 
-                        Top.Second = Top.First;
-                        Top.First = currentKcal;
+            if (Third < currentKcal) {
+                    if (First < currentKcal && tmp == -1) {
+                        Third = Second; 
+                        Second = First;
+                        First = currentKcal;
                         tmp = 0; 
                     }
-                    if (Top.Second < currentKcal && tmp == -1) {
-                        Top.Third = Top.Second; 
-                        Top.Second = currentKcal;
+                    if (Second < currentKcal && tmp == -1) {
+                        Third = Second; 
+                        Second = currentKcal;
                         tmp = 0; 
                     }
-                    if (Top.Third < currentKcal && tmp == -1) {
-                        Top.Third = currentKcal;
+                    if (Third < currentKcal && tmp == -1) {
+                        Third = currentKcal;
                         tmp = 0; 
                     }
                 }                
             currentKcal = 0; 
-            //printf("New elf, current top three: %d %d %d \n", Top.First, Top.Second, Top.Third);
+            //printf("New elf, current top three: %d %d %d \n", First, Second, Third);
             }
 
         currentKcal += atoi(line);    
@@ -62,6 +55,6 @@ int main() {
     if (line){
         free(line);
     }
-    printf("Top three elves have %d kcal with them in total \n ", Top.First + Top.Second + Top.Third);
+    printf("Top three elves have %d kcal with them in total \n ", First + Second + Third);
     return 0; 
 }

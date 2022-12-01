@@ -10,3 +10,6 @@ all: $(PROGRAMS)
 
 Dec1_NumKcal: Dec1_NumKcal.o 
 	gcc -o $@ $^ $(LDFLAGS)
+
+clean: 
+	rm -rf $(PROGRAMS)  *.o core
