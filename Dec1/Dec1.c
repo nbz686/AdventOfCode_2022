@@ -18,6 +18,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
+    //For the search
     int First = 0; 
     int Second = 0; 
     int Third = 0; 
@@ -27,7 +28,8 @@ int main() {
         //If the line is a blank line we have a new elf:  
         if(*line == '\n' || *line == '\r') {
             int tmp  = -1; 
-            //To get fewer comparison I only check if current Kcal makes it into top three. 
+
+            //To get fewer comparisons, I only check if current Kcal makes it into top three. 
             if (Third < currentKcal) {
                     if (First < currentKcal && tmp == -1) {
                         Third = Second; 

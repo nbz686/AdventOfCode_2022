@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
 int main(int argc, char** argv) {
     if (argc != 2) {
         printf("Give me a file to read from! Including .txt or other ending \n");
         return 0; 
 
     }
+
     // For reading from the file: 
     FILE* fp; 
     char* line = NULL; 
@@ -17,8 +20,10 @@ int main(int argc, char** argv) {
     if (fp == NULL) {
         exit(EXIT_FAILURE);
     }
+
     int no_lines = 0; 
     int line_len = 0; 
+
     while ((read = getline(&line, &len, fp)) != -1) {
         no_lines++; 
         line_len = strlen(line);
@@ -57,7 +62,7 @@ int main(int argc, char** argv) {
     // 
     while (ii <= no_lines-2) {
         while (ij <= line_len-2){
-        //printf("checking ii  ij %d %d\n", ii, ij); 
+
         // checking if tree is visible on the horizontal on my left:
         lessthan_me = 0; 
             for (int j = 0; j <= ij-1; j++) {
@@ -65,23 +70,25 @@ int main(int argc, char** argv) {
                     lessthan_me++; 
                 }   
             }
-           // printf("less than me = %d and ij = %d \n", lessthan_me, ij); 
+
             if (lessthan_me ==ij) {
                 visible = 1; 
             }
         lessthan_me = 0; 
+
         // checking if three is visible on the horizontal on my rigth: 
         for (int j = ij+1; j <= line_len-1; j++) {
                 if ((int)arr_2d[ii][ij] > (int)arr_2d[ii][j]) {   
                     lessthan_me++; 
             }   
         }
-        //printf("less than me = %d and lne_len - ij -1= %d \n", lessthan_me, line_len-ij-1); 
+
         if (lessthan_me == line_len-(ij)-1) {
                 visible = 1; 
             }
 
         lessthan_me=0; 
+
         // cheking if tree is visible on the vertical upwards: 
             for (int i = 0; i <= ii-1; i ++) {
                 if ((int)arr_2d[ii][ij] > (int)arr_2d[i][ij]) {  
@@ -91,8 +98,8 @@ int main(int argc, char** argv) {
             if (lessthan_me == ii) {
                 visible = 1; 
             }
-       // printf("less than me = %d AND ii = %d \n", lessthan_me, ii); 
         lessthan_me = 0; 
+
         // checking if three is visible on the vertical downwards: 
             for (int i = ii+1; i <= no_lines-1; i ++) {
                 if ((int)arr_2d[ii][ij] > (int)arr_2d[i][ij]) {  
@@ -100,13 +107,12 @@ int main(int argc, char** argv) {
                 } 
                 
             }
-            //printf("less than me %d and no_line-ii %d \n", lessthan_me, no_lines-ii-1); 
+
             if (lessthan_me == no_lines-ii-1) {
                 visible = 1; 
             }
 
             if (visible == 1){
-                //printf("adding %c from ii %d, ij %d \n", arr_2d[ii][ij], ii, ij);
                 vis_trees++;
             }
             visible = 0; 
@@ -134,6 +140,7 @@ int main(int argc, char** argv) {
     
     ii = 1; 
     ij = 1; 
+
     while (ii <= no_lines-2) {
         while (ij <= line_len-2){
 
@@ -155,6 +162,7 @@ int main(int argc, char** argv) {
                         h2 = j-ij;
                 }   
             }
+            
             // If I am not blocked before edge
             if (h2 == 0) {
                 h2 = line_len-ij-1; 

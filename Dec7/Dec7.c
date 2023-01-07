@@ -11,11 +11,11 @@ struct directory {
     int dir_size; 
     int num_dirs;
     int done; 
-    
 };
 
 void* rec_tree_walk (struct directory* dir, long* best_sofar, int needatleast) {
     if (dir->num_dirs == 0){
+
         // at a leaf
         int tmp = dir->dir_size - needatleast;
         if (tmp> 0 && dir->dir_size < *best_sofar ) {
@@ -24,6 +24,7 @@ void* rec_tree_walk (struct directory* dir, long* best_sofar, int needatleast) {
         dir->done = 1; 
         return rec_tree_walk(dir->parent_dir, best_sofar, needatleast);
     }
+
     //if not at leaf, we get here: 
     for (int i = 0; i < dir->num_dirs; i ++) {
         if (dir->subdirs[i]->done != 1) {
@@ -51,8 +52,8 @@ int main(int argc, char** argv) {
     if (argc != 2) {
         printf("Give me a file to read from! Including .txt or other ending \n");
         return 0; 
-
     }
+
     // For reading from the file: 
     FILE* fp; 
     char* line = NULL; 
@@ -86,6 +87,7 @@ int main(int argc, char** argv) {
 
             ls_ongoing = 0; 
             // There are three commands: cd dir, cd .., ls
+
             // ls
             if (line[2] == 'l') {
                 ls_ongoing = 1; 
@@ -128,6 +130,7 @@ int main(int argc, char** argv) {
                 // adding file size to dirs total size. 
                 current_dir->dir_size= file_size + current_dir->dir_size; 
             }
+
             // file is a dir
             else {
                 //initialising dir
@@ -162,6 +165,7 @@ int main(int argc, char** argv) {
         current_dir = current_dir->parent_dir;
     }
     int need_to_free = total_disk_space -  need_at_least - current_dir->dir_size;
+    
     // now I  know how much space I am missing. but this is a neg number. Bc i refuse to use library we do the following stupid thing: 
     need_to_free = need_to_free*-1;
 

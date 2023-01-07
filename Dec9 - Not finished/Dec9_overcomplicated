@@ -1,0 +1,236 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// DID NOT FINISH THIS ONE!
+
+// grid example to understand dimesions:
+/*
+*   (0,0). . . . . (5,0)
+*        . . . . . 
+*        . . . . .
+*        . . . . . 
+*        . . . . . 
+*   (0,5)           (5,5)
+*/
+
+struct grid {
+    struct point*** points; 
+    int x_len; 
+    int y_len; 
+}; 
+
+struct point {
+    int tail_visited; 
+    int x; 
+    int y; 
+}; 
+
+struct pawn {
+    char name[10];
+    int cur_x; 
+    int cur_y;
+};
+
+// this function is called one at a time. 
+void* move_on_grid(struct grid* grid, int move_x, int move_y, struct pawn* pawn) {
+    
+    // move along x-axis: 
+    // not guarding against moving too far to the left. TODO
+    // if we move outside of the bound we need to malloc more columns: 
+    if (move_x + pawn->cur_x > grid->x_len) {
+        // This is tedious because it means reallocing all rows to add num_col: 
+        for (int i = 0; i < grid->y_len; i ++ ) {
+            grid->points[i] = realloc(grid->points[i], sizeof(struct point*)*grid->x_len + 1); 
+            grid->points[i][pawn->cur_y] = malloc(sizeof(struct point));
+            grid->points[i][pawn->cur_y]->tail_visited = 0; 
+            grid->points[i][pawn->cur_y]->tail_visited= i; 
+            grid->points[i][pawn->cur_y]->y = pawn->cur_y;
+        }
+        // grid is now bigger: 
+        grid->x_len++;  
+    }
+
+    // moving pawn: 
+    pawn->cur_x = pawn->cur_x + move_x; 
+
+    //move vertically: 
+
+    // again not checking if we go out bound from below. TODO
+    if(move_y + pawn->cur_y > grid->y_len) {
+        // we add a row:  
+        grid->points = realloc(grid->points, sizeof(struct point**)*grid->y_len);       
+        grid->points[grid->y_len] = malloc(sizeof(struct point*));
+
+        for (int i = 0; i < grid->x_len; i ++) {
+            grid->points[i][grid->y_len] = malloc(sizeof(struct point));
+            grid->points[i][grid->y_len]->tail_visited = 0; 
+            grid->points[i][grid->y_len]->y = grid->y_len;
+            grid->points[i][grid->y_len]->x = i; 
+        }
+        
+        // grid is now bigger
+        grid->y_len ++; 
+
+    }
+    // moving pawn: 
+    pawn->cur_y = pawn->cur_y + move_y; 
+
+    if (pawn->name[0] == 'T') {
+       //grid->points[pawn->cur_x][pawn->cur_y]->tail_visited = 1; 
+    }
+    return NULL; 
+}
+
+
+// learned my lesson yesterday. Make more functions. 
+
+void* move_1_left(struct grid* grid, struct pawn* P) {
+    move_on_grid(grid, -1, 0, P);
+    return NULL; 
+}
+
+void* move_1_right(struct grid* grid, struct pawn* P) {
+    move_on_grid(grid, 1, 0, P); 
+    return NULL; 
+}
+
+ 
+void* move_1_up(struct grid* grid, struct pawn* P) {
+    move_on_grid(grid, 0, -1, P); 
+    return NULL; 
+}
+
+void* move_1_down(struct grid* grid, struct pawn* P) {
+    move_on_grid(grid, 0, 1, P); 
+    return NULL; 
+}
+
+
+void* tail_move (struct grid* grid, struct pawn* H, struct pawn* T) {
+    // if the absolute distance on x axis is 2 or greater then T needs to move
+
+    if ( abs(H->cur_x - T->cur_x) > 1) {
+        if (H->cur_x - T->cur_x < 0) {
+            move_1_left(grid, T); 
+        }
+        else {
+            move_1_right(grid, T);
+        }
+    }
+    // same for y-axis: 
+    if ( abs(H->cur_y - T->cur_y) > 1) {
+        if (H->cur_y - T->cur_y < 0) {
+            move_1_up(grid, T);
+        }
+        else {
+            move_1_down(grid, T);
+        }
+    }
+    return NULL; 
+}
+
+
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        printf("Give me a file to read from! Including .txt or other ending \n");
+        return 0; 
+
+    }
+    // For reading from the file: 
+    FILE* fp; 
+    char* line = NULL; 
+    size_t len = 0; 
+    ssize_t read; 
+    fp = fopen(argv[1], "r");
+
+    if (fp == NULL) {
+        exit(EXIT_FAILURE);
+    }
+   
+
+    //initialising grid: 
+    struct grid* grid = malloc(sizeof(struct grid));
+    grid->points = (malloc(sizeof(struct point**)));
+    grid->points[0] = malloc(sizeof(struct point*));
+    grid->points[0][0] = malloc (sizeof(struct point));
+    grid->points[0][0]->tail_visited = 0;
+    grid->points[0][0]->x = 0; 
+    grid->points[0][0]->y = 0; 
+    grid->x_len = 1; 
+    grid->y_len = 1; 
+
+    // initialising head and tail: 
+    struct pawn* H = malloc(sizeof(struct pawn));
+    struct pawn* T = malloc(sizeof(struct pawn));
+
+    H->cur_x = 0;
+    H->cur_y = 0;
+    H->name[0] = 'H';
+    T->cur_x = 0; 
+    T->cur_y = 0; 
+    T->name[0] = 'T';
+
+    while ((read = getline(&line, &len, fp)) != -1) {
+       switch (line[0])
+       {
+       int to_move; 
+       case 'R':
+            sscanf(line, "R %d", &to_move );
+            printf(" doing: R \nH is at %d %d and T is at %d %d \n", H->cur_x, H->cur_y, T->cur_x, T->cur_y);
+            for (int i = 1; i <= to_move; i ++) {
+                move_1_right(grid, H);
+                tail_move(grid, H, T);
+            }
+             printf("did: R. H is at %d %d and T is at %d %d \n", H->cur_x, H->cur_y, T->cur_x, T->cur_y);
+        break;
+
+        case 'L':
+            sscanf(line, "L %d", &to_move );
+            printf(" doing: L\n H is at %d %d and T is at %d %d \n", H->cur_x, H->cur_y, T->cur_x, T->cur_y);
+            for (int i = 1; i <= to_move; i ++) {
+                move_1_left(grid, H);
+                tail_move(grid, H, T);
+              }
+            printf("did: L H is at %d %d and T is at %d %d \n", H->cur_x, H->cur_y, T->cur_x, T->cur_y);
+            break;
+
+        case 'D':
+            sscanf(line, "D %d", &to_move );
+            printf(" doing: D \n H is at %d %d and T is at %d %d \n", H->cur_x, H->cur_y, T->cur_x, T->cur_y);
+            for (int i = 1; i <= to_move; i ++) {
+                move_1_up(grid, H);
+                tail_move(grid, H, T);
+            }
+            printf("did: D. H is at %d %d and T is at %d %d \n", H->cur_x, H->cur_y, T->cur_x, T->cur_y);
+            break; 
+        
+        case 'U':
+            sscanf(line, "U %d", &to_move );
+            printf(" doing: U \n H is at %d %d and T is at %d %d \n", H->cur_x, H->cur_y, T->cur_x, T->cur_y);
+            for (int i = 1; i <= to_move; i ++) {
+                move_1_(grid, H);
+                tail_move(grid, H, T);
+            }
+            printf(" did: U. H is at %d %d and T is at %d %d \n", H->cur_x, H->cur_y, T->cur_x, T->cur_y);
+
+            break; 
+       
+       default:
+        break;
+       }
+       printf("\n");
+    }
+    
+    fclose(fp);
+    
+    
+    //printf("Highest scenic score available is: %d \n", scenicscore); 
+
+    if (line){
+        free(line);
+    }
+    return 0; 
+}
+
+

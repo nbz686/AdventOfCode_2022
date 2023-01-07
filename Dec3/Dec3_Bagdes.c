@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//TODO: solution only works if input file has two empty lines at the bottom. 
-// Solution to part 2. I wrote over my solution for part 1 to do solution 2. 
-
 
 int main(int argc, char** argv) {
     if (argc != 2) {
@@ -40,13 +37,14 @@ int main(int argc, char** argv) {
             printf("module 0");
             strcpy(str0, line);
         }
+        
         else if (no_lines %3 == 1) {
-                        printf("module 1");
-
+            printf("module 1");
             strcpy(str1, line);
         }
+
         else if (no_lines %3 == 2) {
-                        printf("module 2");
+            printf("module 2");
 
             strcpy(str2, line);
             for (int i = 0; i< strlen(str0)-2; i++){

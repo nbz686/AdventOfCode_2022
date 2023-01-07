@@ -55,6 +55,8 @@ int main(int argc, char** argv) {
         count ++; 
 
         int nomatch = 0;
+
+
         //Now check if items are unique
         for (size_t i = 0; i < 14; i++)
         {
@@ -73,11 +75,6 @@ int main(int argc, char** argv) {
             }
         }
     }
-
-    
-
-
-
     free(buffer);
 
     return 0; 

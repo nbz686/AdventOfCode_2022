@@ -2,10 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//TODO: solution only works if input file has two empty lines at the bottom. 
-// Solution to part 2. I wrote over my solution for part 1 to do solution 2. 
-
-
 int main(int argc, char** argv) {
     if (argc != 2) {
         printf("Give me a file to read from! Including .txt or other ending");
@@ -17,16 +13,18 @@ int main(int argc, char** argv) {
     char* line = NULL; 
     size_t len = 0; 
     ssize_t read; 
+
     int ascii = 0; // for easier debugging
     int aoc_val = 0;  // for easier debugging
     int total = 0;  // only one really neccesaryS
+
+
     fp = fopen(argv[1], "r");
     int found = 0; 
     if (fp == NULL) {
         exit(EXIT_FAILURE);
     }
     // All the total lenght of lines are even dicvisble by 2. Take strlen(line)
-    // printf("Modulo whole line: %d \n", ((int)len)%2); == 0 for all lines
     while ((read = getline(&line, &len, fp)) != -1) {
         found = -1;
         int len = strlen(line)-2;

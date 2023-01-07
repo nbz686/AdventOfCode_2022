@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -pedantic -std=gnu99 -g
 LDFLAGS=-lm
-PROGRAMS=Dec2_RockSciPap Dec2.2_RSP
+PROGRAMS=Dec2 Dec2.2
 TESTS=..
 
 .PHONY: all test clean ../src.zip
